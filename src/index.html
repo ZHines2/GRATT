@@ -12,9 +12,13 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background-color: #000;
-            color: #0f0;
+            font-family: Georgia, 'Times New Roman', serif;
+            background-color: #f5f1e8;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, .02) 25%, rgba(0, 0, 0, .02) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .02) 75%, rgba(0, 0, 0, .02) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, .02) 25%, rgba(0, 0, 0, .02) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .02) 75%, rgba(0, 0, 0, .02) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            color: #2c2416;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,17 +29,23 @@
         #game-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             max-width: 800px;
+            background-color: #fdfbf7;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         #viewport {
             display: grid;
             grid-template-columns: repeat(11, 1fr);
-            gap: 2px;
-            background-color: #111;
-            padding: 10px;
-            border: 2px solid #0f0;
+            gap: 1px;
+            background-color: #3a3228;
+            padding: 12px;
+            border: 3px solid #3a3228;
+            border-radius: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         .cell {
@@ -44,81 +54,100 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #000;
-            border: 1px solid #222;
-            font-size: 14px;
-            font-weight: bold;
+            background-color: #fdfbf7;
+            border: 1px solid #d4cfc4;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c2416;
+            transition: all 0.2s ease;
         }
 
         .cell.player {
-            background-color: #0a0;
-            color: #000;
+            background-color: #f9d67a;
+            color: #2c2416;
+            box-shadow: inset 0 0 0 2px #d4a73c;
+            font-weight: 700;
         }
 
         .cell.undiscovered {
-            color: #555;
+            color: #a8a091;
+            font-weight: 400;
         }
 
         .cell.void {
-            background-color: #000;
-            border-color: #000;
+            background-color: #e8e3d8;
+            border-color: #e8e3d8;
         }
 
         #status-panel {
-            background-color: #111;
-            border: 2px solid #0f0;
-            padding: 15px;
+            background-color: #fdfbf7;
+            border: 2px solid #d4cfc4;
+            border-left: 4px solid #8b7355;
+            padding: 20px;
             min-height: 120px;
+            border-radius: 2px;
         }
 
         #status-panel h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #0ff;
+            font-size: 20px;
+            margin-bottom: 14px;
+            color: #3a3228;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 16px;
         }
 
         #status-panel .info-line {
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 8px 0;
+            font-size: 15px;
         }
 
         #status-panel .info-label {
-            color: #888;
+            color: #6b5d4f;
             display: inline-block;
             width: 120px;
+            font-weight: 500;
         }
 
         #status-panel .info-value {
-            color: #0f0;
+            color: #2c2416;
+            font-weight: 600;
         }
 
         #status-panel .message-text {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #001100;
-            border-left: 3px solid #0f0;
-            color: #fff;
+            margin-top: 14px;
+            padding: 12px 14px;
+            background-color: #f9f6f0;
+            border-left: 4px solid #8b7355;
+            color: #3a3228;
+            font-style: italic;
+            line-height: 1.5;
         }
 
         #loading {
             text-align: center;
             font-size: 18px;
-            color: #0f0;
+            color: #3a3228;
+            font-style: italic;
         }
 
         .error {
-            color: #f00;
-            background-color: #110000;
-            padding: 10px;
-            border: 2px solid #f00;
+            color: #8b2e2e;
+            background-color: #fdf0f0;
+            padding: 12px;
+            border: 2px solid #d4a5a5;
+            border-left: 4px solid #8b2e2e;
             margin: 10px 0;
+            border-radius: 2px;
         }
 
         .controls-hint {
             text-align: center;
-            color: #888;
-            font-size: 12px;
+            color: #6b5d4f;
+            font-size: 13px;
             margin-top: 10px;
+            font-style: italic;
         }
     </style>
 </head>
