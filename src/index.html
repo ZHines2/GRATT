@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinate Dungeon Walker v0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+        }
+
+        #viewport {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            gap: 2px;
+            background-color: #111;
+            padding: 10px;
+            border: 2px solid #0f0;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            border: 1px solid #222;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .cell.player {
+            background-color: #0a0;
+            color: #000;
+        }
+
+        .cell.undiscovered {
+            color: #555;
+        }
+
+        .cell.void {
+            background-color: #000;
+            border-color: #000;
+        }
+
+        #status-panel {
+            background-color: #111;
+            border: 2px solid #0f0;
+            padding: 15px;
+            min-height: 120px;
+        }
+
+        #status-panel h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #0ff;
+        }
+
+        #status-panel .info-line {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        #status-panel .info-label {
+            color: #888;
+            display: inline-block;
+            width: 120px;
+        }
+
+        #status-panel .info-value {
+            color: #0f0;
+        }
+
+        #status-panel .message-text {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #001100;
+            border-left: 3px solid #0f0;
+            color: #fff;
+        }
+
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            color: #0f0;
+        }
+
+        .error {
+            color: #f00;
+            background-color: #110000;
+            padding: 10px;
+            border: 2px solid #f00;
+            margin: 10px 0;
+        }
+
+        .controls-hint {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading">Loading Coordinate Dungeon Walker...</div>
+        <div id="viewport" style="display: none;"></div>
+        <div id="status-panel" style="display: none;">
+            <h2>Status</h2>
+            <div class="info-line">
+                <span class="info-label">Position:</span>
+                <span class="info-value" id="position-display">00 . 00 . 00</span>
+            </div>
+            <div class="info-line">
+                <span class="info-label">Tile Code:</span>
+                <span class="info-value" id="tile-code-display">--</span>
+            </div>
+            <div class="info-line">
+                <span class="info-label">Tile Type:</span>
+                <span class="info-value" id="tile-type-display">--</span>
+            </div>
+            <div id="message-container"></div>
+        </div>
+        <div class="controls-hint">Use Arrow Keys or WASD to move</div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

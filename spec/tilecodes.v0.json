@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "codes": {
+    "00": { "kind": "origin", "label": "Origin" },
+    "01": { "kind": "stairs_down", "label": "Stairs Down" },
+    "02": { "kind": "stairs_up", "label": "Stairs Up" },
+    "21": { "kind": "service", "label": "Save Point" },
+    "22": { "kind": "service", "label": "Shop" },
+    "23": { "kind": "service", "label": "Inn" },
+    "30": { "kind": "teleport", "label": "Teleporter" },
+    "40": { "kind": "message", "label": "Sign" },
+    "41": { "kind": "message", "label": "Note" },
+    "50": { "kind": "encounter", "label": "Weak Enemy" },
+    "51": { "kind": "encounter", "label": "Strong Enemy" },
+    "52": { "kind": "encounter", "label": "Boss" },
+    "60": { "kind": "treasure", "label": "Chest" },
+    "70": { "kind": "door", "label": "Locked Door" },
+    "71": { "kind": "door", "label": "Open Door" },
+    "80": { "kind": "trap", "label": "Spike Trap" },
+    "90": { "kind": "event", "label": "Story Event" },
+    "ff": { "kind": "void", "label": "Void" }
+  }
+}
