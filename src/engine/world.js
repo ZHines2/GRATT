@@ -6,14 +6,14 @@ export class World {
         this.floors = new Map();
     }
 
-    async loadTileCodes(path = '../spec/tilecodes.v0.json') {
+    async loadTileCodes(path = '/spec/tilecodes.v0.json') {
         const response = await fetch(path);
         const data = await response.json();
         this.tileCodes = data.codes;
         return this.tileCodes;
     }
 
-    async loadFloor(z, path = `../spec/floor${String(z).padStart(2, '0')}.v0.json`) {
+    async loadFloor(z, path = `/spec/floor${String(z).padStart(2, '0')}.v0.json`) {
         const response = await fetch(path);
         const data = await response.json();
         this.floors.set(z, data);
