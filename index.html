@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinate Dungeon Walker v0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background-color: #f5f1e8;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, .02) 25%, rgba(0, 0, 0, .02) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .02) 75%, rgba(0, 0, 0, .02) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, .02) 25%, rgba(0, 0, 0, .02) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .02) 75%, rgba(0, 0, 0, .02) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            color: #2c2416;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 800px;
+            background-color: #fdfbf7;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        #viewport {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            gap: 1px;
+            background-color: #3a3228;
+            padding: 12px;
+            border: 3px solid #3a3228;
+            border-radius: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fdfbf7;
+            border: 1px solid #d4cfc4;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c2416;
+            transition: all 0.2s ease;
+        }
+
+        .cell.player {
+            background-color: #f9d67a;
+            color: #2c2416;
+            box-shadow: inset 0 0 0 2px #d4a73c;
+            font-weight: 700;
+        }
+
+        .cell.undiscovered {
+            color: #a8a091;
+            font-weight: 400;
+        }
+
+        .cell.void {
+            background-color: #e8e3d8;
+            border-color: #e8e3d8;
+        }
+
+        #status-panel {
+            background-color: #fdfbf7;
+            border: 2px solid #d4cfc4;
+            border-left: 4px solid #8b7355;
+            padding: 20px;
+            min-height: 120px;
+            border-radius: 2px;
+        }
+
+        #status-panel h2 {
+            font-size: 16px;
+            margin-bottom: 14px;
+            color: #3a3228;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        #status-panel .info-line {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        #status-panel .info-label {
+            color: #6b5d4f;
+            display: inline-block;
+            width: 120px;
+            font-weight: 500;
+        }
+
+        #status-panel .info-value {
+            color: #2c2416;
+            font-weight: 600;
+        }
+
+        #status-panel .message-text {
+            margin-top: 14px;
+            padding: 12px 14px;
+            background-color: #f9f6f0;
+            border-left: 4px solid #8b7355;
+            color: #3a3228;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        #loading {
+            text-align: center;
+            font-size: 18px;
+            color: #3a3228;
+            font-style: italic;
+        }
+
+        .error {
+            color: #8b2e2e;
+            background-color: #fdf0f0;
+            padding: 12px;
+            border: 2px solid #d4a5a5;
+            border-left: 4px solid #8b2e2e;
+            margin: 10px 0;
+            border-radius: 2px;
+        }
+
+        .controls-hint {
+            text-align: center;
+            color: #6b5d4f;
+            font-size: 13px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Debug Panel Styles */
+        #debug-panel {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background-color: #fdfbf7;
+            border: 3px solid #8b7355;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-size: 13px;
+        }
+
+        #debug-panel h3 {
+            color: #3a3228;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #d4cfc4;
+        }
+
+        #debug-panel h3:first-child {
+            margin-top: 0;
+        }
+
+        .debug-section {
+            margin-bottom: 15px;
+        }
+
+        .debug-input-group {
+            display: flex;
+            gap: 5px;
+            margin: 8px 0;
+        }
+
+        .debug-input-group input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #d4cfc4;
+            border-radius: 2px;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 12px;
+        }
+
+        .debug-btn {
+            padding: 6px 12px;
+            background-color: #8b7355;
+            color: #fdfbf7;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .debug-btn:hover {
+            background-color: #6b5d4f;
+        }
+
+        .debug-btn:active {
+            background-color: #3a3228;
+        }
+
+        .debug-btn.full-width {
+            width: 100%;
+            margin: 4px 0;
+        }
+
+        .debug-btn.small {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        .debug-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+        }
+
+        .debug-hint {
+            color: #6b5d4f;
+            font-size: 11px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .debug-toggle-hint {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(139, 115, 85, 0.8);
+            color: #fdfbf7;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading">Loading Coordinate Dungeon Walker...</div>
+        <div id="viewport" style="display: none;"></div>
+        <div id="status-panel" style="display: none;">
+            <h2>Status</h2>
+            <div class="info-line">
+                <span class="info-label">Position:</span>
+                <span class="info-value" id="position-display">00 . 00 . 00</span>
+            </div>
+            <div class="info-line">
+                <span class="info-label">Tile Code:</span>
+                <span class="info-value" id="tile-code-display">--</span>
+            </div>
+            <div class="info-line">
+                <span class="info-label">Tile Type:</span>
+                <span class="info-value" id="tile-type-display">--</span>
+            </div>
+            <div id="message-container"></div>
+        </div>
+        <div class="controls-hint">Use Arrow Keys or WASD to move</div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-toggle-hint">Press ` to toggle debug</div>
+    <div id="debug-panel">
+        <h3>🛠️ Debug Controls</h3>
+        
+        <div class="debug-section">
+            <h3>Position Controls</h3>
+            <div class="debug-input-group">
+                <input type="number" id="debug-z" placeholder="Z" value="0" style="width: 60px;">
+                <input type="number" id="debug-y" placeholder="Y" value="50">
+                <input type="number" id="debug-x" placeholder="X" value="50">
+            </div>
+            <button class="debug-btn full-width" id="debug-teleport">Teleport</button>
+            <button class="debug-btn full-width" id="debug-origin">Go to Origin</button>
+            
+            <div class="debug-hint">Shift Position:</div>
+            <div class="debug-grid">
+                <button class="debug-btn small" id="debug-shift-up">↑ North</button>
+                <button class="debug-btn small" id="debug-shift-down">↓ South</button>
+                <button class="debug-btn small" id="debug-shift-left">← West</button>
+                <button class="debug-btn small" id="debug-shift-right">→ East</button>
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Discovery Controls</h3>
+            <button class="debug-btn full-width" id="debug-reveal-all">Reveal All Tiles</button>
+            <button class="debug-btn full-width" id="debug-hide-all">Reset Discovery</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>Tile Spawner</h3>
+            <div class="debug-input-group">
+                <input type="text" id="debug-tile-code" placeholder="Code (e.g. 30)" maxlength="2">
+                <button class="debug-btn" id="debug-spawn-tile">Spawn</button>
+            </div>
+            <div class="debug-hint">Spawns tile at current position</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Quick Tests (v0 Traversal Only)</h3>
+            <div class="debug-hint">Navigation:</div>
+            <button class="debug-btn full-width" data-test-tile="01" data-test-type="stairs">Test Stairs Down (01)</button>
+            <button class="debug-btn full-width" data-test-tile="02" data-test-type="stairs">Test Stairs Up (02)</button>
+            <button class="debug-btn full-width" data-test-tile="30" data-test-type="teleport">Test Teleporter (30)</button>
+            
+            <div class="debug-hint">Messages:</div>
+            <button class="debug-btn full-width" data-test-tile="40" data-test-type="message">Test Sign (40)</button>
+            <button class="debug-btn full-width" data-test-tile="41" data-test-type="message">Test Note (41)</button>
+        </div>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
