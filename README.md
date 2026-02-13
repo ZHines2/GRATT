@@ -51,14 +51,13 @@ Press **`** (backtick key) to open the debug panel. This powerful testing tool a
 - Place any tile code at your current position
 - Test custom layouts without editing JSON files
 
-**Quick Test Buttons:**
-- Test all navigation mechanics (stairs, teleporters)
-- Test service tiles (save point, shop, inn)
-- Test message tiles (signs, notes)
-- Test encounters (weak enemy, strong enemy, boss)
-- Test other mechanics (chest, doors, traps, events)
+**Quick Test Buttons (v0 Traversal Only):**
+- Test navigation mechanics: stairs down (01), stairs up (02), teleporter (30)
+- Test message tiles: sign (40), note (41)
 
 The debug interface automatically creates linked teleporters and functional stairs for testing. All debug actions are logged to the console for verification.
+
+**Note:** v0 focuses on traversal mechanics only. Tile codes for encounters, shops, inns, chests, traps, etc. are defined in the spec but have no behavior implemented.
 
 **Console Access:**
 ```javascript
