@@ -14,14 +14,18 @@ A minimal playable dungeon crawler with coordinate-based navigation, inspired by
 - Message tiles and various tile types
 - No procedural generation - only authored tiles exist
 
-### How to Run
+### How to Play
+
+**Play Online:** Visit the [GitHub Pages site](https://zhines2.github.io/GRATT/) to play immediately in your browser.
+
+**Local Development:**
 
 1. **Start a local web server** in the repository directory:
    - Using Python: `python -m http.server 8000` or `python3 -m http.server 8000`
    - Using Node.js: `npx http-server -p 8000`
    - Using VSCode: Install the "Live Server" extension and click "Go Live"
 
-2. **Open in browser**: Navigate to `http://localhost:8000/src/index.html`
+2. **Open in browser**: Navigate to `http://localhost:8000/`
 
 3. **Play**: Use arrow keys or WASD to move around the dungeon
 
