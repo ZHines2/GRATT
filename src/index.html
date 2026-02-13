@@ -149,6 +149,113 @@
             margin-top: 10px;
             font-style: italic;
         }
+
+        /* Debug Panel Styles */
+        #debug-panel {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background-color: #fdfbf7;
+            border: 3px solid #8b7355;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-size: 13px;
+        }
+
+        #debug-panel h3 {
+            color: #3a3228;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #d4cfc4;
+        }
+
+        #debug-panel h3:first-child {
+            margin-top: 0;
+        }
+
+        .debug-section {
+            margin-bottom: 15px;
+        }
+
+        .debug-input-group {
+            display: flex;
+            gap: 5px;
+            margin: 8px 0;
+        }
+
+        .debug-input-group input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #d4cfc4;
+            border-radius: 2px;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 12px;
+        }
+
+        .debug-btn {
+            padding: 6px 12px;
+            background-color: #8b7355;
+            color: #fdfbf7;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .debug-btn:hover {
+            background-color: #6b5d4f;
+        }
+
+        .debug-btn:active {
+            background-color: #3a3228;
+        }
+
+        .debug-btn.full-width {
+            width: 100%;
+            margin: 4px 0;
+        }
+
+        .debug-btn.small {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        .debug-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+        }
+
+        .debug-hint {
+            color: #6b5d4f;
+            font-size: 11px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .debug-toggle-hint {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(139, 115, 85, 0.8);
+            color: #fdfbf7;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -172,6 +279,74 @@
             <div id="message-container"></div>
         </div>
         <div class="controls-hint">Use Arrow Keys or WASD to move</div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-toggle-hint">Press ` to toggle debug</div>
+    <div id="debug-panel">
+        <h3>🛠️ Debug Controls</h3>
+        
+        <div class="debug-section">
+            <h3>Position Controls</h3>
+            <div class="debug-input-group">
+                <input type="number" id="debug-z" placeholder="Z" value="0" style="width: 60px;">
+                <input type="number" id="debug-y" placeholder="Y" value="50">
+                <input type="number" id="debug-x" placeholder="X" value="50">
+            </div>
+            <button class="debug-btn full-width" id="debug-teleport">Teleport</button>
+            <button class="debug-btn full-width" id="debug-origin">Go to Origin</button>
+            
+            <div class="debug-hint">Shift Position:</div>
+            <div class="debug-grid">
+                <button class="debug-btn small" id="debug-shift-up">↑ North</button>
+                <button class="debug-btn small" id="debug-shift-down">↓ South</button>
+                <button class="debug-btn small" id="debug-shift-left">← West</button>
+                <button class="debug-btn small" id="debug-shift-right">→ East</button>
+            </div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Discovery Controls</h3>
+            <button class="debug-btn full-width" id="debug-reveal-all">Reveal All Tiles</button>
+            <button class="debug-btn full-width" id="debug-hide-all">Reset Discovery</button>
+        </div>
+
+        <div class="debug-section">
+            <h3>Tile Spawner</h3>
+            <div class="debug-input-group">
+                <input type="text" id="debug-tile-code" placeholder="Code (e.g. 30)" maxlength="2">
+                <button class="debug-btn" id="debug-spawn-tile">Spawn</button>
+            </div>
+            <div class="debug-hint">Spawns tile at current position</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>Quick Tests</h3>
+            <div class="debug-hint">Navigation:</div>
+            <button class="debug-btn full-width" data-test-tile="01" data-test-type="stairs">Test Stairs Down (01)</button>
+            <button class="debug-btn full-width" data-test-tile="02" data-test-type="stairs">Test Stairs Up (02)</button>
+            <button class="debug-btn full-width" data-test-tile="30" data-test-type="teleport">Test Teleporter (30)</button>
+            
+            <div class="debug-hint">Service Tiles:</div>
+            <button class="debug-btn full-width" data-test-tile="21" data-test-type="service">Test Save Point (21)</button>
+            <button class="debug-btn full-width" data-test-tile="22" data-test-type="service">Test Shop (22)</button>
+            <button class="debug-btn full-width" data-test-tile="23" data-test-type="service">Test Inn (23)</button>
+            
+            <div class="debug-hint">Messages:</div>
+            <button class="debug-btn full-width" data-test-tile="40" data-test-type="message">Test Sign (40)</button>
+            <button class="debug-btn full-width" data-test-tile="41" data-test-type="message">Test Note (41)</button>
+            
+            <div class="debug-hint">Encounters:</div>
+            <button class="debug-btn full-width" data-test-tile="50" data-test-type="encounter">Test Weak Enemy (50)</button>
+            <button class="debug-btn full-width" data-test-tile="51" data-test-type="encounter">Test Strong Enemy (51)</button>
+            <button class="debug-btn full-width" data-test-tile="52" data-test-type="encounter">Test Boss (52)</button>
+            
+            <div class="debug-hint">Other:</div>
+            <button class="debug-btn full-width" data-test-tile="60" data-test-type="treasure">Test Chest (60)</button>
+            <button class="debug-btn full-width" data-test-tile="70" data-test-type="door">Test Locked Door (70)</button>
+            <button class="debug-btn full-width" data-test-tile="80" data-test-type="trap">Test Trap (80)</button>
+            <button class="debug-btn full-width" data-test-tile="90" data-test-type="event">Test Event (90)</button>
+        </div>
     </div>
 
     <script type="module" src="main.js"></script>

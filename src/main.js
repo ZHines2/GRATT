@@ -11,6 +11,7 @@ import { State } from './engine/state.js';
 import { Renderer } from './engine/render.js';
 import { Actions } from './engine/actions.js';
 import { InputHandler } from './engine/input.js';
+import { DebugControls } from './engine/debug.js';
 
 async function init() {
     try {
@@ -34,11 +35,20 @@ async function init() {
             actions.move(direction);
         });
 
+        // Initialize debug controls
+        const debugControls = new DebugControls(world, state, actions, renderer);
+        
+        // Expose to window for console access
+        window.debugControls = debugControls;
+        window.game = { world, state, actions, renderer };
+
         // Initial render
         renderer.show();
         renderer.render();
 
         console.log('Coordinate Dungeon Walker v0 initialized successfully');
+        console.log('Press ` to open debug panel');
+        console.log('Debug controls available at: window.debugControls');
     } catch (error) {
         console.error('Failed to initialize game:', error);
         const container = document.getElementById('game-container');
