@@ -27,6 +27,17 @@ async function init() {
         const loaded = state.loadFromStorage();
         if (loaded) {
             console.log('Loaded saved game from localStorage');
+            // Load the floor for the saved position
+            const pos = state.getPosition();
+            if (!world.getFloor(pos.z)) {
+                try {
+                    await world.loadFloor(pos.z);
+                    console.log(`Loaded floor ${pos.z} from save`);
+                } catch (error) {
+                    console.error(`Failed to load saved floor ${pos.z}, resetting to origin`);
+                    state.initializeAtStart();
+                }
+            }
         } else {
             state.initializeAtStart();
             console.log('Starting new game at origin');

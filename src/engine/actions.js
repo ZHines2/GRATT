@@ -41,17 +41,17 @@ export class Actions {
         this.state.setPosition(pos.z, newY, newX);
         this.state.clearStatusMessage();
 
-        // Handle tile interaction
-        this.handleTileInteraction(tile);
+        // Handle tile interaction (async for stairs)
+        this.handleTileInteraction(tile).then(() => {
+            // Auto-save after every move
+            this.state.saveToStorage();
 
-        // Auto-save after every move
-        this.state.saveToStorage();
-
-        // Re-render the viewport and status
-        this.renderer.render();
+            // Re-render the viewport and status
+            this.renderer.render();
+        });
     }
 
-    handleTileInteraction(tile) {
+    async handleTileInteraction(tile) {
         const pos = this.state.getPosition();
         const codeInfo = this.world.resolveCode(tile.code);
 
@@ -60,8 +60,8 @@ export class Actions {
         switch (codeInfo.kind) {
             case 'stairs_down':
             case 'stairs_up':
-                // handleStairs is now async, so we need to handle it differently
-                this.handleStairs(tile);
+                // handleStairs is async, so we await it
+                await this.handleStairs(tile);
                 break;
             case 'teleport':
                 this.handleTeleport(tile);
