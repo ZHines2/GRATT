@@ -4,7 +4,6 @@
     "00": { "kind": "origin", "label": "Origin", "silent": false },
     "01": { "kind": "stairs_down", "label": "Stairs Down", "silent": false },
     "02": { "kind": "stairs_up", "label": "Stairs Up", "silent": false },
-    "21": { "kind": "service", "label": "Save Point", "silent": false },
     "22": { "kind": "service", "label": "Shop", "silent": false },
     "23": { "kind": "service", "label": "Inn", "silent": false },
     "30": { "kind": "teleport", "label": "Teleporter", "silent": false },
