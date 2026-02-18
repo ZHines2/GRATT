@@ -105,9 +105,6 @@ export class Actions {
             
             // Auto-save after floor change
             this.state.saveToStorage();
-            
-            // Re-render after async operation
-            this.renderer.render();
         } else {
             this.state.setStatusMessage('No destination.');
         }
