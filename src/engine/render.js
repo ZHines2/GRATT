@@ -31,6 +31,9 @@ export class Renderer {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
 
+                // Add floor-based color class
+                cell.classList.add(`floor-${z}`);
+
                 // Check if this is the player position
                 const isPlayer = (dy === 0 && dx === 0);
 
@@ -40,6 +43,8 @@ export class Renderer {
                 } else {
                     const tile = this.world.getTile(z, y, x);
                     const discovered = this.state.isDiscovered(z, y, x);
+                    const codeInfo = tile ? this.world.resolveCode(tile.code) : null;
+                    const isSilent = codeInfo?.silent === true;
 
                     if (!tile) {
                         // Void tile
@@ -48,10 +53,19 @@ export class Renderer {
                     } else if (!discovered) {
                         // Undiscovered tile
                         cell.classList.add('undiscovered');
-                        cell.textContent = '?';
+                        if (isSilent) {
+                            cell.textContent = '';  // Silent tiles show nothing when undiscovered
+                        } else {
+                            cell.textContent = '?';
+                        }
                     } else {
-                        // Discovered tile - show code
-                        cell.textContent = tile.code;
+                        // Discovered tile
+                        cell.classList.add('discovered');
+                        if (isSilent) {
+                            cell.textContent = '';  // Silent tiles never show code
+                        } else {
+                            cell.textContent = tile.code;  // Important tiles show their code
+                        }
                     }
                 }
 
