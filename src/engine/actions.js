@@ -44,6 +44,9 @@ export class Actions {
         // Handle tile interaction
         this.handleTileInteraction(tile);
 
+        // Auto-save after every move
+        this.state.saveToStorage();
+
         // Re-render the viewport and status
         this.renderer.render();
     }
@@ -92,6 +95,9 @@ export class Actions {
             // Move to destination
             this.state.setPosition(dest.z, dest.y, dest.x);
             this.state.setStatusMessage(`Moved to floor ${dest.z}`);
+            
+            // Auto-save after floor change
+            this.state.saveToStorage();
         } else {
             this.state.setStatusMessage('No destination.');
         }
@@ -121,5 +127,8 @@ export class Actions {
         // Teleport to destination
         this.state.setPosition(dest.z, dest.y, dest.x);
         this.state.setStatusMessage('Teleported!');
+        
+        // Auto-save after teleport
+        this.state.saveToStorage();
     }
 }

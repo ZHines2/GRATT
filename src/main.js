@@ -22,7 +22,15 @@ async function init() {
 
         // Create state and initialize at start position
         const state = new State(world);
-        state.initializeAtStart();
+        
+        // Try to load saved game, otherwise start at origin
+        const loaded = state.loadFromStorage();
+        if (loaded) {
+            console.log('Loaded saved game from localStorage');
+        } else {
+            state.initializeAtStart();
+            console.log('Starting new game at origin');
+        }
 
         // Create renderer
         const renderer = new Renderer(world, state);
