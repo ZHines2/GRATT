@@ -53,11 +53,7 @@ export class Renderer {
                     } else if (!discovered) {
                         // Undiscovered tile
                         cell.classList.add('undiscovered');
-                        if (isSilent) {
-                            cell.textContent = '';  // Silent tiles show nothing when undiscovered
-                        } else {
-                            cell.textContent = '?';
-                        }
+                        cell.textContent = '';  // All undiscovered tiles show nothing (cleaner, no hints)
                     } else {
                         // Discovered tile
                         cell.classList.add('discovered');
