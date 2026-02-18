@@ -60,6 +60,7 @@ export class Actions {
         switch (codeInfo.kind) {
             case 'stairs_down':
             case 'stairs_up':
+                // handleStairs is now async, so we need to handle it differently
                 this.handleStairs(tile);
                 break;
             case 'teleport':
@@ -74,15 +75,21 @@ export class Actions {
         }
     }
 
-    handleStairs(tile) {
+    async handleStairs(tile) {
         if (tile.data && tile.data.to) {
             const dest = tile.data.to;
             
-            // Check if destination floor is loaded
-            const destFloor = this.world.getFloor(dest.z);
+            // Check if destination floor is loaded, if not try to load it
+            let destFloor = this.world.getFloor(dest.z);
             if (!destFloor) {
-                this.state.setStatusMessage('No destination.');
-                return;
+                try {
+                    await this.world.loadFloor(dest.z);
+                    destFloor = this.world.getFloor(dest.z);
+                } catch (error) {
+                    console.error(`Failed to load floor ${dest.z}:`, error);
+                    this.state.setStatusMessage('No destination.');
+                    return;
+                }
             }
 
             // Check if destination tile exists
@@ -98,6 +105,9 @@ export class Actions {
             
             // Auto-save after floor change
             this.state.saveToStorage();
+            
+            // Re-render after async operation
+            this.renderer.render();
         } else {
             this.state.setStatusMessage('No destination.');
         }
