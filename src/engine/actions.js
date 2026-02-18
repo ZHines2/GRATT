@@ -41,14 +41,17 @@ export class Actions {
         this.state.setPosition(pos.z, newY, newX);
         this.state.clearStatusMessage();
 
-        // Handle tile interaction
-        this.handleTileInteraction(tile);
+        // Handle tile interaction (async for stairs)
+        this.handleTileInteraction(tile).then(() => {
+            // Auto-save after every move
+            this.state.saveToStorage();
 
-        // Re-render the viewport and status
-        this.renderer.render();
+            // Re-render the viewport and status
+            this.renderer.render();
+        });
     }
 
-    handleTileInteraction(tile) {
+    async handleTileInteraction(tile) {
         const pos = this.state.getPosition();
         const codeInfo = this.world.resolveCode(tile.code);
 
@@ -57,7 +60,8 @@ export class Actions {
         switch (codeInfo.kind) {
             case 'stairs_down':
             case 'stairs_up':
-                this.handleStairs(tile);
+                // handleStairs is async, so we await it
+                await this.handleStairs(tile);
                 break;
             case 'teleport':
                 this.handleTeleport(tile);
@@ -71,15 +75,21 @@ export class Actions {
         }
     }
 
-    handleStairs(tile) {
+    async handleStairs(tile) {
         if (tile.data && tile.data.to) {
             const dest = tile.data.to;
             
-            // Check if destination floor is loaded
-            const destFloor = this.world.getFloor(dest.z);
+            // Check if destination floor is loaded, if not try to load it
+            let destFloor = this.world.getFloor(dest.z);
             if (!destFloor) {
-                this.state.setStatusMessage('No destination.');
-                return;
+                try {
+                    await this.world.loadFloor(dest.z);
+                    destFloor = this.world.getFloor(dest.z);
+                } catch (error) {
+                    console.error(`Failed to load floor ${dest.z}:`, error);
+                    this.state.setStatusMessage('No destination.');
+                    return;
+                }
             }
 
             // Check if destination tile exists
@@ -92,6 +102,9 @@ export class Actions {
             // Move to destination
             this.state.setPosition(dest.z, dest.y, dest.x);
             this.state.setStatusMessage(`Moved to floor ${dest.z}`);
+            
+            // Auto-save after floor change
+            this.state.saveToStorage();
         } else {
             this.state.setStatusMessage('No destination.');
         }
@@ -121,5 +134,8 @@ export class Actions {
         // Teleport to destination
         this.state.setPosition(dest.z, dest.y, dest.x);
         this.state.setStatusMessage('Teleported!');
+        
+        // Auto-save after teleport
+        this.state.saveToStorage();
     }
 }
